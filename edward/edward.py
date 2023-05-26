@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+
 import argparse
 import sys, getopt
+import numpy as np
 from cyvcf2 import VCF
-import numpy as np 
+
+from pca import pca
 '''
 pca input
 - data: numpy ndarray
@@ -11,23 +15,27 @@ pca input
 def main():
     pass
 
-def process_pca(vcf_path):
-    for variant in VCF('some.vcf.gz'):
-
-        variant.gt_types # numpy array
-        variant.gt_ref_depths, variant.gt_alt_depths # numpy arrays
-        variant.gt_phases, variant.gt_quals # numpy arrays
-        variant.gt_bases # numpy array
-        variant.CHROM, variant.start, variant.end, variant.ID, \
-        variant.REF, variant.ALT, variant.FILTER, variant.QUAL
-        variant.INFO.get('DP') # int
-        variant.INFO.get('FS') # float
-        variant.INFO.get('AC') # float
-        a = variant.gt_phred_ll_homref # numpy array
-        b = variant.gt_phred_ll_het # numpy array
-        c = variant.gt_phred_ll_homalt # numpy array
-
-        str(variant)
+# for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
+def process_pca(vcf_path, number_of_pcs_arg):
+    '''
+    TODO: documentation
+    '''
+    gt_array = []
+    for variant in VCF(vcf_path):
+        gt = [sum(genotypes[:-1]) for genotypes in variant.genotypes]
+        # variant.genotypes is list containing [0, 0, True], [1, 1, True], [0, 1, False], ... 
+        # where the first 2 elements are the genotype and the third element is a boolean indicating
+        # whether that genotype is phased or not (for now I'm ignoring this but it may be important
+        # to consider later. 
+        # 
+        # NOTE: some of the genotypes only have one allele and some have negative alleles 
+        # whatever that even means. For now I'm just gonna keep going but something to investigate.
+        gt_array.append(gt)
+    gt_array = np.array(gt_array) # convert to numpy ndarray
+    pca_transformed = pca(gt_array, number_of_pcs_arg) # perform pca
+    
+    print(pca_transformed) # for testing. should comment out
+    # TODO: plot pca_transformed and output to html
 
 if __name__ == "__main__":
     
@@ -49,8 +57,6 @@ if __name__ == "__main__":
     EXTRA OPTIONS: 
     --number-of-pcs -n: number of pcs for PCA [default=5]
     '''
-
-
 
     # Create the parser
     parser = argparse.ArgumentParser(description='Description of your program')
@@ -90,10 +96,6 @@ if __name__ == "__main__":
     print(f'Louvain: {louvain_arg}')
     print(f'Number of PCs: {number_of_pcs_arg}')
 
-
     
-
-    pca_matrix = process_pca(input_arg)
     
-
-    
+    pca_matrix = process_pca(input_arg, number_of_pcs_arg)

@@ -12,7 +12,7 @@ def pca(data, nComponents):
         The data on which to perform PCA. Rows represent observations and 
         columns represents features.
     nComponents : int > 0
-        Number of PCs to use for dimensionality reduction. 
+        Number of PCs to use for dimensionality reduction.
 
     Returns
     -------

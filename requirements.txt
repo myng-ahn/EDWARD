@@ -1,2 +1,2 @@
-- cyvcf2
-- numpy
+numpy
+cyvcf2

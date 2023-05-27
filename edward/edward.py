@@ -108,6 +108,8 @@ def main():
     
     pca_matrix = process_pca(input_arg, number_of_pcs_arg)
     pca_output = pca(pca_matrix, number_of_pcs_arg)
+    ## todo: add min-sohn html function call here
+
     sys.exit(0)
 
 

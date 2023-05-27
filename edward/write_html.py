@@ -44,7 +44,7 @@ def generate_info(input, samples, observations):
     '''.format(input=input, time=time, samples=samples, observations=observations)
     return info
 
-def generate_pca(pca_figs, pca_stats):
+def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
     '''
     Function to generate html div containing plots pertaining to PCA as well as a table
     containing any relevant statistics (for example, the top 5 PCs)
@@ -63,9 +63,15 @@ def generate_pca(pca_figs, pca_stats):
         encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
         img = "<img src=\'data:image/png;base64,{}\'>".format(encoded)
         all_images+='\n<br>'+img
-    for stat in pca_stats:
-        pass
-        ## TODO write Top PCAs into a table
+    all_vecs = ''
+    for i in range(len(pca_eigvals)):
+        mag = str(pca_eigvals[i])
+        dir = str(pca_eigvecs[:, i])
+        table_row = '''\n<tr>
+                            <td>{dir}</td>
+                            <td>{mag}</td>
+                        </tr>'''.format(dir=dir, mag=mag)
+        all_vecs.append(table_row)
 
 
     return '''<div id="PCA" class="tabcontent">
@@ -77,13 +83,10 @@ def generate_pca(pca_figs, pca_stats):
                     <table>
                         <caption>Top Principal Components</caption>
                         <tr>
-                            <td>Root Mean Squared Error</td>
-                            <td>0.69</td>
+                            <th>Direction</th>
+                            <th>Magnitude</th>
                         </tr>
-                        <tr>
-                            <td>R-Squared</td>
-                            <td>0.99</td>
-                        </tr>
+                        {vecs}
                     </table>
                 </div>
         </div>'''.format(imgs=all_images)
@@ -91,7 +94,7 @@ def generate_pca(pca_figs, pca_stats):
 
 def write_html(input,
                samples, observations,
-               pca_figs=None, pca_stats=None,
+               pca_figs=None, pca_eigvals=None, pca_eigvecs=None,
                tsne_figs=None, tsna_stats=None,
                umap_figs=None, umap_stats=None,
                output=None):
@@ -102,7 +105,7 @@ def write_html(input,
 
     # Template info div
     info_div = generate_info(input, samples, observations)
-    pca_div = generate_pca(pca_figs, pca_stats)
+    pca_div = generate_pca(pca_figs, pca_eigvals, pca_eigvecs)
 
     # Template for html to insert statistics and figures into.
     # Note that {} are replaced with {{}} to be escaped (allow for use of .format)

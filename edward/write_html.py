@@ -102,6 +102,7 @@ def write_html(input,
     Function to write html summary report. Expects two lists (one of figures and one of numerical statistics)
     for each of the three dimensionality reduction techniques. Unless an output prefix is specified, default to ./output.html
     '''
+    # TODO ^^edit that
 
     # Template info div
     info_div = generate_info(input, samples, observations)
@@ -238,10 +239,10 @@ samples = str(4800)
 observations = str(6500)
 output = './temp'
 pca_figs = []
-for i in range(8):
-    fig = plt.figure()
-    plt.title("Chart #" + str(i))
-    pca_figs.append(fig)
+# for i in range(8):
+#     fig = plt.figure()
+#     plt.title("Chart #" + str(i))
+#     pca_figs.append(fig)
 
-write_html(input=input, samples=samples, observations=observations, output=output, pca_figs=pca_figs)
+write_html(input=input, samples=samples, observations=observations, output=output)
 #################################

@@ -4,8 +4,10 @@ import argparse
 import sys, getopt
 import numpy as np
 from cyvcf2 import VCF
+from . import pca as pca
+from edward import __version__
 
-from pca import pca
+
 '''
 pca input
 - data: numpy ndarray
@@ -59,7 +61,9 @@ if __name__ == "__main__":
     '''
 
     # Create the parser
-    parser = argparse.ArgumentParser(description='Description of your program')
+    parser = argparse.ArgumentParser(
+        prog='edward',
+        description='exceptional-delicate-wonderful-attempt(at)-reducing-dimensions')
 
     # Define the arguments
     parser.add_argument('-t', '--type', required=True, choices=['v', 'c'], help="'v' for vcf, 'c' for RNA count matrix")
@@ -71,6 +75,8 @@ if __name__ == "__main__":
     parser.add_argument('--leiden', default=None, help="leiden argument")
     parser.add_argument('--louvain', default=None, help="louvain argument")
     parser.add_argument('-n', '--number-of-pcs', default=5, type=int, help="number of pcs for PCA")
+    parser.add_argument("--version", help="Print the version and quit", \
+		action="version", version = '{version}'.format(version=__version__))
 
     # Parse the arguments
     args = parser.parse_args()
@@ -99,3 +105,4 @@ if __name__ == "__main__":
     
     
     pca_matrix = process_pca(input_arg, number_of_pcs_arg)
+    pca_output = pca(pca_matrix, number_of_pcs_arg)

@@ -1,2 +1,3 @@
 numpy
 cyvcf2
+pandas

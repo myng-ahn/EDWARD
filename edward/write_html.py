@@ -1,6 +1,7 @@
 import base64
 from io import BytesIO
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 
 # write_html.py usage
@@ -13,6 +14,7 @@ from datetime import datetime
 # observations: # cols of matrix (as str)
 # pca_figs: list of matplot figures (as many as you want)
 # pca_stats: list of top PCs (as many as you want)
+# output (optional prefix for name of output file) defaults to ./output.html
 
 
 def generate_info(input, samples, observations):
@@ -54,9 +56,37 @@ def generate_pca(pca_figs, pca_stats):
                 <br>Run with &lt;insert_command_here_dont_know_it_yet&gt; --pca</p>
         </div>
         '''
-    encoded_figs = []
+    all_images = ''
     for fig in pca_figs:
+        tmpfile = BytesIO()
+        fig.savefig(tmpfile, format='png')
+        encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
+        img = "<img src=\'data:image/png;base64,{}\'>".format(encoded)
+        all_images+='\n<br>'+img
+    for stat in pca_stats:
         pass
+        ## TODO write Top PCAs into a table
+
+
+    return '''<div id="PCA" class="tabcontent">
+                <h3 style="text-align:center">PCA</h3>
+                <div style='float:left'>
+                    {imgs}
+                </div>
+                <div style='float:left; margin-left: 20%'>
+                    <table>
+                        <caption>Top Principal Components</caption>
+                        <tr>
+                            <td>Root Mean Squared Error</td>
+                            <td>0.69</td>
+                        </tr>
+                        <tr>
+                            <td>R-Squared</td>
+                            <td>0.99</td>
+                        </tr>
+                    </table>
+                </div>
+        </div>'''.format(imgs=all_images)
 
 
 def write_html(input,
@@ -122,6 +152,7 @@ def write_html(input,
                 border: 3px solid #ccc;
                 width: 90%;
                 border-left: none;
+                border-bottom: none;
                 height: 80%;
             }}
         </style>
@@ -134,7 +165,7 @@ def write_html(input,
             div.tabcontent {{display: none}}
             table {{
                 border-collapse: collapse;
-                width: 40%;
+                width: fit-content;
             }}
 
             caption {{
@@ -197,9 +228,17 @@ def write_html(input,
         file.write(template)
     return
 
+
+## Stuff to test my html writing
 input = 'fake.vcf'
 samples = str(4800)
 observations = str(6500)
 output = './temp'
+pca_figs = []
+for i in range(8):
+    fig = plt.figure()
+    plt.title("Chart #" + str(i))
+    pca_figs.append(fig)
 
-write_html(input=input, samples=samples, observations=observations, output=output)
+write_html(input=input, samples=samples, observations=observations, output=output, pca_figs=pca_figs)
+#################################

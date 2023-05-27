@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import argparse
-import sys, getopt
+import sys
 import numpy as np
+import os
 from cyvcf2 import VCF
 from . import pca as pca
 from edward import __version__
@@ -39,7 +40,7 @@ def process_pca(vcf_path, number_of_pcs_arg):
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
 
-if __name__ == "__main__":
+def main():
     
     USAGE_MSG = "USAGE: python edward.py -h [required] --type <v or c> --pca/umap/tsne <input> [options] --prefix --leiden --louivain --number-of-pcs "
 
@@ -106,3 +107,9 @@ if __name__ == "__main__":
     
     pca_matrix = process_pca(input_arg, number_of_pcs_arg)
     pca_output = pca(pca_matrix, number_of_pcs_arg)
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

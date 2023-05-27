@@ -5,8 +5,8 @@ import sys
 import numpy as np
 import os
 from cyvcf2 import VCF
-from . import pca as pca
-from edward import __version__
+import pca as pca
+#from edward import __version__
 
 
 '''
@@ -76,8 +76,8 @@ def main():
     parser.add_argument('--leiden', default=None, help="leiden argument")
     parser.add_argument('--louvain', default=None, help="louvain argument")
     parser.add_argument('-n', '--number-of-pcs', default=5, type=int, help="number of pcs for PCA")
-    parser.add_argument("--version", help="Print the version and quit", \
-		action="version", version = '{version}'.format(version=__version__))
+    #parser.add_argument("--version", help="Print the version and quit", \
+	#	action="version", version = '{version}'.format(version=__version__))
 
     # Parse the arguments
     args = parser.parse_args()

@@ -45,4 +45,4 @@ def pca(data, nComponents):
     pca_proj = np.dot(norm_data, sorted_eigvecs)
     pca_proj = pca_proj[:, 0:nComponents]
 
-    return pca_proj
+    return pca_proj, sorted_eigvals, sorted_eigvecs

@@ -7,6 +7,7 @@ import os
 from cyvcf2 import VCF
 import pca as pca
 from html import *
+from write_html import write_html
 #from edward import __version__
 
 
@@ -107,8 +108,8 @@ def main():
     
     
     pca_matrix = process_pca(input_arg, number_of_pcs_arg)
-    pca_output = pca(pca_matrix, number_of_pcs_arg)
-    ## todo: add min-sohn html function call here
+    pca_output, pca_eigvals, pca_eigvecs = pca(pca_matrix, number_of_pcs_arg)
+    write_html(input_arg, -1, -1, pca_figs=[], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
 
     sys.exit(0)
 

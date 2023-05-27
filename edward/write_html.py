@@ -89,12 +89,12 @@ def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
                         {vecs}
                     </table>
                 </div>
-        </div>'''.format(imgs=all_images)
+        </div>'''.format(imgs=all_images,vecs=all_vecs)
 
 
 def write_html(input,
                samples, observations,
-               pca_figs=None, pca_eigvals=None, pca_eigvecs=None,
+               pca_figs=[], pca_eigvals=[], pca_eigvecs=[],
                tsne_figs=None, tsna_stats=None,
                umap_figs=None, umap_stats=None,
                output=None):

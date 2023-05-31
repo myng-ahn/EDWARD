@@ -27,8 +27,9 @@ edward [required] --type <v or c> --pca/umap/tsne --input <input> [options] --pr
 To run `edward` on a small test example (using files in this repo):
 
 ```
-edward -t v -i example_data/sample.vcf --pca 
+edward -t v -i example_data/sample.vcf.gz --pca -n 2
 ```
+* For now `test.html` will be generated
 
 # Documentation 
 

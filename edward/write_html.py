@@ -71,7 +71,7 @@ def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
                             <td>{dir}</td>
                             <td>{mag}</td>
                         </tr>'''.format(dir=dir, mag=mag)
-        all_vecs.append(table_row)
+        all_vecs += table_row
 
 
     return '''<div id="PCA" class="tabcontent">

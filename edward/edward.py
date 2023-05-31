@@ -6,7 +6,7 @@ import numpy as np
 import os
 from cyvcf2 import VCF
 #from pca import pca
-from html import *
+#from html import *
 #from write_html import write_html
 import matplotlib.pyplot as plt
 from edward import __version__
@@ -114,7 +114,7 @@ def main():
 
     ##testing dummy figures
     fig = plt.figure()
-    write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+    write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
 
     sys.exit(0)
 

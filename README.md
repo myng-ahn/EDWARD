@@ -29,7 +29,7 @@ To run `edward` on a small test example (using files in this repo):
 ```
 edward -t v -i example_data/sample.vcf.gz --pca -n 2
 ```
-* For now `test.html` will be generated
+* For now `output.html` will be generated
 
 # Documentation 
 

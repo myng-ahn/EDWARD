@@ -15,7 +15,6 @@ Once required libraries are installed, you can install mypileup with the followi
 python setup.py install
 ```
 
-for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
 
 # Basic Usage
 

@@ -14,7 +14,7 @@ Once required libraries are installed, you can install mypileup with the followi
 ```
 python setup.py install
 ```
-
+*note: this package can only be installed on linux (including MacOS) devices 
 
 # Basic Usage
 

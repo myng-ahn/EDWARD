@@ -12,9 +12,6 @@ pca input
 - ncomponents: int
 '''
 
-def main():
-    pass
-
 # for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
 def process_pca(vcf_path, number_of_pcs_arg):
     '''

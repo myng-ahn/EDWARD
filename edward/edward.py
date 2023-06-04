@@ -36,7 +36,7 @@ def process_pca(vcf_path, number_of_pcs_arg):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
-    pca_transformed = pca(gt_array, number_of_pcs_arg) # perform pca
+    pca_transformed = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
@@ -71,7 +71,7 @@ def main():
     parser.add_argument('-t', '--type', required=True, choices=['v', 'c'], help="'v' for vcf, 'c' for RNA count matrix")
     parser.add_argument('-i', '--input', required=True, help="input file as specified by type")
     parser.add_argument('-p', '--prefix', default=None, help="prefix for tsv and html outputs")
-    parser.add_argument('--pca', required=True, action='store_true', help="run pca algorithm")
+    parser.add_argument('--pca', action='store_true', help="run pca algorithm")
     parser.add_argument('--umap', action='store_true', help="run umap algorithm")
     parser.add_argument('--tsne', action='store_true', help="run tsne algorithm")
     parser.add_argument('--leiden', default=None, help="leiden argument")
@@ -105,9 +105,14 @@ def main():
     print(f'Number of PCs: {number_of_pcs_arg}')
 
     
-    
-    pca_matrix = process_pca(input_arg, number_of_pcs_arg)
-    pca_output = pca(pca_matrix, number_of_pcs_arg)
+    ### 
+    # check out arguments
+    #
+    #
+    ###
+
+    #pca_matrix = process_pca(input_arg, number_of_pcs_arg)
+    #pca_output = pca(pca_matrix, number_of_pcs_arg)
     sys.exit(0)
 
 

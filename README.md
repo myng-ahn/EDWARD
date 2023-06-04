@@ -14,8 +14,7 @@ Once required libraries are installed, you can install mypileup with the followi
 ```
 python setup.py install
 ```
-
-for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
+*note: this package can only be installed on linux (including MacOS) devices 
 
 # Basic Usage
 
@@ -27,8 +26,9 @@ edward [required] --type <v or c> --pca/umap/tsne --input <input> [options] --pr
 To run `edward` on a small test example (using files in this repo):
 
 ```
-edward -t v -i example_data/sample.vcf --pca --num_PCs 5'
+edward -t v -i example_data/sample.vcf.gz --pca -n 2
 ```
+* For now `output.html` will be generated
 
 # Documentation 
 

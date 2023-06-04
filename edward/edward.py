@@ -5,9 +5,13 @@ import sys
 import numpy as np
 import os
 from cyvcf2 import VCF
-import pca as pca
-from html import *
-#from edward import __version__
+#from pca import pca
+#from html import *
+#from write_html import write_html
+import matplotlib.pyplot as plt
+from edward import __version__
+from . import pca as pca
+from . import write_html as write_html
 
 
 '''
@@ -36,8 +40,8 @@ def process_pca(vcf_path, number_of_pcs_arg):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
-    pca_transformed = pca.pca(gt_array, number_of_pcs_arg) # perform pca
-    
+    pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
+    return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
 
@@ -76,7 +80,7 @@ def main():
     parser.add_argument('--tsne', action='store_true', help="run tsne algorithm")
     parser.add_argument('--leiden', default=None, help="leiden argument")
     parser.add_argument('--louvain', default=None, help="louvain argument")
-    parser.add_argument('-n', '--number-of-pcs', default=5, type=int, help="number of pcs for PCA")
+    parser.add_argument('-n', '--number-pcs', default=5, type=int, help="number of pcs for PCA")
     #parser.add_argument("--version", help="Print the version and quit", \
 	#	action="version", version = '{version}'.format(version=__version__))
 
@@ -92,7 +96,7 @@ def main():
     tsne_arg = args.tsne
     leiden_arg = args.leiden
     louvain_arg = args.louvain
-    number_of_pcs_arg = args.number_of_pcs
+    number_of_pcs_arg = args.number_pcs
 
     # Print the parsed arguments
     print(f'Type: {type_arg}')
@@ -111,8 +115,12 @@ def main():
     #
     ###
 
-    #pca_matrix = process_pca(input_arg, number_of_pcs_arg)
-    #pca_output = pca(pca_matrix, number_of_pcs_arg)
+    #pca_output, pca_eigvals, pca_eigvecs = process_pca(input_arg, number_of_pcs_arg)
+
+    ##testing dummy figures
+    fig = plt.figure()
+    write_html.write_html(input_arg, -1, -1, #pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+
     sys.exit(0)
 
 

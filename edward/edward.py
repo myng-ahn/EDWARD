@@ -40,8 +40,24 @@ def process_pca(vcf_path, number_of_pcs_arg):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
+    
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
-    return pca_proj, sorted_eigvals, sorted_eigvecs
+
+    # Plotting pca_transformed. Generates all combinations of principal components against each other
+    figs=[]
+    for i in range(number_of_pcs_arg):
+        for j in range(number_of_pcs_arg):
+            if j <= i:
+                continue
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            ax.scatter(pca_proj[:, i], pca_proj[:, j])
+            ax.set_xlabel('PC{}'.format(i+1))
+            ax.set_ylabel('PC{}'.format(j+1))
+            figs.append(fig)
+            
+
+    return pca_proj, sorted_eigvals, sorted_eigvecs, gt_array.shape[0], gt_array.shape[1], figs
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
 
@@ -110,11 +126,15 @@ def main():
 
     
     
-    pca_output, pca_eigvals, pca_eigvecs = process_pca(input_arg, number_of_pcs_arg)
-
+    pca_output, pca_eigvals, pca_eigvecs, samples, observations, figs = process_pca(input_arg, number_of_pcs_arg)
+    print(pca_output)
+    print()
+    print(type(pca_output))
+    print(pca_output.shape)
     ##testing dummy figures
     fig = plt.figure()
-    write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+    plt.title('Placeholder figure, need to generate these later')
+    write_html.write_html(input_arg, samples, observations, pca_figs=figs, pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
 
     sys.exit(0)
 

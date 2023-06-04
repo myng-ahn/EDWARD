@@ -76,10 +76,7 @@ def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
 
     return '''<div id="PCA" class="tabcontent">
                 <h3 style="text-align:center">PCA</h3>
-                <div style='float:left'>
-                    {imgs}
-                </div>
-                <div style='float:left; margin-left: 20%'>
+                <div style='float:right; margin-right: 5%'>
                     <table>
                         <caption>Top Principal Components</caption>
                         <tr>
@@ -88,6 +85,9 @@ def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
                         </tr>
                         {vecs}
                     </table>
+                </div>
+                <div style='float:left'>
+                    {imgs}
                 </div>
         </div>'''.format(imgs=all_images,vecs=all_vecs)
 
@@ -158,6 +158,10 @@ def write_html(input,
                 border-left: none;
                 border-bottom: none;
                 height: 80%;
+            }}
+
+            img {{
+                border: 2px solid#ccc;
             }}
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

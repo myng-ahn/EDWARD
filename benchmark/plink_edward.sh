@@ -1,22 +1,20 @@
 #!/bin/bash
 
 # Check if an input file name is provided
-if [ $# -eq 0 ]; then
-    echo "Usage: ./plink_edward.sh <input_file>"
+if [ $# -ne 3 ]; then
+    echo "Usage: ./plink_edward.sh <input_file> <num_pcs> <out_prefix>"
     exit 1
 fi
 
 # Assign the input file name to a variable
 input_file="$1"
+num_pcs="$2"
+prefix="$3"
 
 # Call plink command with the input file
 echo Plink....
-echo start: `date +%m-%d-%Y_%H-%M-%S` 
-plink --vcf "$input_file" --pca --out "$input_file"
-echo end: `date +%m-%d-%Y_%H-%M-%S`
+echo `time ./plink --vcf "$input_file" --pca "$num_pcs" --out "$prefix"`
 
 # Call edward command with the input file
 echo EDWARD....
-echo start: `date +%m-%d-%Y_%H-%M-%S` 
-edward -t v -i "$input_file" --pca -p "$input_file"
-echo end: `date +%m-%d-%Y_%H-%M-%S`
+echo `time edward -t v -i "$input_file" --pca -p "$prefix" -n "$num_pcs"`

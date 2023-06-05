@@ -1,5 +1,5 @@
 import numpy as np
-import umap as um
+import umap as ump
 from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
 
@@ -54,7 +54,9 @@ def tsne(data, perplexity=30):
     scaled_data = StandardScaler().fit_transform(data)
     num_pca_components = min(50, data.shape[1])
     pca_transformed, __, __ = pca(scaled_data, num_pca_components)
-    tsne = TSNE(n_components=2, perplexity=perplexity, learning_rate='auto')
+    tsne = TSNE(n_components=2, perplexity=perplexity)
+    print(pca_transformed)
+    # pca_transformed = np.array(pca_transformed, dtype='float32')
     tsne_transformed = tsne.fit_transform(pca_transformed)
     return tsne_transformed
 
@@ -62,6 +64,6 @@ def umap(data):
     scaled_data = StandardScaler().fit_transform(data)
     num_pca_components = min(50, data.shape[1])
     pca_transformed, __, __ = pca(scaled_data, num_pca_components)
-    umap = um.UMAP()
-    umap_transformed = umap.fit_transform(pca_transformed)
+    um = ump.UMAP()
+    umap_transformed = um.fit_transform(pca_transformed)
     return umap_transformed

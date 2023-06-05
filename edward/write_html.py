@@ -53,7 +53,7 @@ def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
         return '''<div id="PCA" class="tabcontent">
                 <h3 style="text-align:center">PCA</h3>
                 <p> No PCA plots or statistics were generated when running EDWARD. Either an error occurred or PCA was not selected as a command-line option
-                <br>Run with &lt;insert_command_here_dont_know_it_yet&gt; --pca</p>
+                <br>Run with --pca</p>
         </div>
         '''
     all_images = ''
@@ -91,12 +91,50 @@ def generate_pca(pca_figs, pca_eigvals, pca_eigvecs):
                 </div>
         </div>'''.format(imgs=all_images,vecs=all_vecs)
 
+def generate_umap(umap_fig):
+    if umap_fig is None:
+        return '''<div id="UMAP" class="tabcontent">
+                <h3 style="text-align:center">UMAP</h3>
+                <p> No UMAP plots or statistics were generated when running EDWARD. Either an error occurred or UMAP was not selected as a command-line option
+                <br>Run with --umap</p>
+        </div>
+        '''
+    tmpfile = BytesIO()
+    umap_fig.savefig(tmpfile, format='png')
+    encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
+    img = "<img src=\'data:image/png;base64,{}\'>".format(encoded)
+    return '''<div id="UMAP" class="tabcontent">
+                <h3 style="text-align:center">UMAP</h3>
+                <div style='float:left'>
+                    {img}
+                </div>
+    '''.format(img=img)
+
+def generate_tsne(tsne_fig):
+    if tsne_fig is None:
+        return '''<div id="t-SNE" class="tabcontent">
+                <h3 style="text-align:center">t-SNE</h3>
+                <p> No t-SNE plots or statistics were generated when running EDWARD. Either an error occurred or t-SNE was not selected as a command-line option
+                <br>Run with --tsne</p>
+        </div>
+        '''
+    tmpfile = BytesIO()
+    tsne_fig.savefig(tmpfile, format='png')
+    encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
+    img = "<img src=\'data:image/png;base64,{}\'>".format(encoded)
+    return '''<div id="t-SNE" class="tabcontent">
+                <h3 style="text-align:center">t-SNE</h3>
+                <div style='float:left'>
+                    {img}
+                </div>
+    '''.format(img=img)
+
 
 def write_html(input,
                samples, observations,
                pca_figs=[], pca_eigvals=[], pca_eigvecs=[],
-               tsne_figs=None, tsna_stats=None,
-               umap_figs=None, umap_stats=None,
+               tsne_fig=None,
+               umap_fig=None,
                output=None):
     '''
     Function to write html summary report. Expects two lists (one of figures and one of numerical statistics)
@@ -106,7 +144,8 @@ def write_html(input,
     # Template info div
     info_div = generate_info(input, samples, observations)
     pca_div = generate_pca(pca_figs, pca_eigvals, pca_eigvecs)
-
+    umap_div = generate_umap(umap_fig)
+    tsne_div = generate_tsne(tsne_fig)
     # Template for html to insert statistics and figures into.
     # Note that {} are replaced with {{}} to be escaped (allow for use of .format)
     template = '''<html>
@@ -218,9 +257,11 @@ def write_html(input,
         
         {info}
         {pca}
+        {umap}
+        {tsne}
     </body>
     </html>
-    '''.format(info=info_div, pca=pca_div)
+    '''.format(info=info_div, pca=pca_div, umap=umap_div, tsne=tsne_div)
 
     if output is None:
         output='./output.html'

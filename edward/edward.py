@@ -3,6 +3,7 @@
 import argparse
 import sys
 import numpy as np
+import pandas as pd 
 import os
 from cyvcf2 import VCF
 #from pca import pca
@@ -24,7 +25,7 @@ def main():
     pass
 
 # for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
-def process_pca(vcf_path, number_of_pcs_arg):
+def process_vcf_pca(vcf_path, number_of_pcs_arg):
     '''
     TODO: documentation
     '''
@@ -44,6 +45,19 @@ def process_pca(vcf_path, number_of_pcs_arg):
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
+
+def process_count_pca(matrix_path, number_of_pcs_arg):
+    '''
+    TODO: documentation
+    '''
+    # rows = samples, columns = genes
+    gt_array = []
+    gt = pd.read_csv(matrix_path)  
+    gt_array = np.array(gt.values) # convert to numpy ndarray
+    pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
+    return pca_proj, sorted_eigvals, sorted_eigvecs
+    print(pca_transformed) # for testing. should comment out
+
 
 def main():
     
@@ -78,8 +92,8 @@ def main():
     parser.add_argument('--pca', action='store_true', help="run pca algorithm")
     parser.add_argument('--umap', action='store_true', help="run umap algorithm")
     parser.add_argument('--tsne', action='store_true', help="run tsne algorithm")
-    parser.add_argument('--leiden', default=None, help="leiden argument")
-    parser.add_argument('--louvain', default=None, help="louvain argument")
+    parser.add_argument('--leiden', action='store_true', help="leiden argument")
+    parser.add_argument('--louvain', action='store_true', help="louvain argument")
     parser.add_argument('-n', '--number-pcs', default=5, type=int, help="number of pcs for PCA")
     #parser.add_argument("--version", help="Print the version and quit", \
 	#	action="version", version = '{version}'.format(version=__version__))
@@ -115,11 +129,21 @@ def main():
     #
     ###
 
-    #pca_output, pca_eigvals, pca_eigvecs = process_pca(input_arg, number_of_pcs_arg)
+    if not (pca_arg or umap_arg or tsne_arg): 
+        print("PCA, UMAP, or TSNE not declared")
+        sys.exit(1)
+
+    if pca_arg:
+        if type_arg =='v': 
+            pca_output, pca_eigvals, pca_eigvecs = process_vcf_pca(input_arg, number_of_pcs_arg)
+        else:
+            pca_output, pca_eigvals, pca_eigvecs = process_count_pca(input_arg, number_of_pcs_arg)
+
+    #pca_output, pca_eigvals, pca_eigvecs = process_vcf_pca(input_arg, number_of_pcs_arg)
 
     ##testing dummy figures
-    fig = plt.figure()
-    write_html.write_html(input_arg, -1, -1, #pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+    #fig = plt.figure()
+    #write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
 
     sys.exit(0)
 

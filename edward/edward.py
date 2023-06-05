@@ -11,7 +11,7 @@ from cyvcf2 import VCF
 #from write_html import write_html
 import matplotlib.pyplot as plt
 from edward import __version__
-from . import pca as pca
+from . import dim_reduce as dim_reduce
 from . import write_html as write_html
 
 
@@ -20,9 +20,6 @@ pca input
 - data: numpy ndarray
 - ncomponents: int
 '''
-
-def main():
-    pass
 
 # for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
 def process_vcf(vcf_path):

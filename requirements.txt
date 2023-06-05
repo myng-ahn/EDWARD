@@ -2,3 +2,6 @@ numpy
 cyvcf2
 pandas
 matplotlib
+scikit-network
+sklearn
+igraph

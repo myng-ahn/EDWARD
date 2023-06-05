@@ -105,9 +105,10 @@ def generate_umap(umap_fig):
     img = "<img src=\'data:image/png;base64,{}\'>".format(encoded)
     return '''<div id="UMAP" class="tabcontent">
                 <h3 style="text-align:center">UMAP</h3>
-                <div style='float:left'>
+                <div style='margin:auto'>
                     {img}
                 </div>
+            </div>
     '''.format(img=img)
 
 def generate_tsne(tsne_fig):
@@ -124,9 +125,10 @@ def generate_tsne(tsne_fig):
     img = "<img src=\'data:image/png;base64,{}\'>".format(encoded)
     return '''<div id="t-SNE" class="tabcontent">
                 <h3 style="text-align:center">t-SNE</h3>
-                <div style='float:left'>
+                <div style='margin:auto'>
                     {img}
                 </div>
+            </div>
     '''.format(img=img)
 
 
@@ -257,8 +259,8 @@ def write_html(input,
         
         {info}
         {pca}
-        {umap}
         {tsne}
+        {umap}
     </body>
     </html>
     '''.format(info=info_div, pca=pca_div, umap=umap_div, tsne=tsne_div)

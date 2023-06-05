@@ -6,6 +6,7 @@ from sklearn.neighbors import NearestNeighbors
 def knn(data, k):
     """ TODO: documentation
     """
+    k = int(k)
     neighbors = NearestNeighbors(n_neighbors=k, algorithm='auto').fit(data)
     neighbors = neighbors.kneighbors_graph(data).toarray()
     return neighbors
@@ -15,6 +16,7 @@ def leiden(data, k, obj="modularity", res=0.5, n_iter=-1):
     """
     neighbors = knn(data, k)
     nbrs_graph = Graph.Adjacency(neighbors.tolist())
+    nbrs_graph = nbrs_graph.as_undirected(mode="collapse")
     partition = nbrs_graph.community_leiden(objective_function=obj, 
                                             resolution=res, 
                                             n_iterations=n_iter)

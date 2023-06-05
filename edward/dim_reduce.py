@@ -1,5 +1,5 @@
 import numpy as np
-import umap
+#import umap
 from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
 

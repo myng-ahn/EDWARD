@@ -38,8 +38,8 @@ def process_vcf(vcf_path):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
-    shape = gt_array.shape
-    return gt_array, shape
+    row, col = gt_array.shape
+    return gt_array, row, col
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
@@ -53,8 +53,8 @@ def process_count(matrix_path):
     gt_array = []
     gt = pd.read_csv(matrix_path)  
     gt_array = np.array(gt.values) # convert to numpy ndarray
-    shape = gt_array.shape
-    return gt_array, shape
+    row, col = gt_array.shape
+    return gt_array, row, col
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
@@ -151,7 +151,7 @@ def main():
     output: None 
 
     if pca_arg:
-        pca_output, pca_eigvals, pca_eigvecs = pca.pca(array, number_of_pcs_arg) # perform pca
+        pca_output, pca_eigvals, pca_eigvecs = dim_reduce.pca(array, number_of_pcs_arg) # perform pca
         pca_figs=[]
         for i in range(number_of_pcs_arg):
             for j in range(number_of_pcs_arg):
@@ -167,7 +167,7 @@ def main():
         pass
 
 
-    write_html.write_html(input_arg, samples, observations, pca_figs=pca_figs, pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs, output=prefix)
+    write_html.write_html(input_arg, samples, observations, pca_figs=pca_figs, pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs, output=prefix_arg)
     
     ##testing dummy figures
     #fig = plt.figure()

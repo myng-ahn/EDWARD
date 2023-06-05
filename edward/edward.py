@@ -41,7 +41,8 @@ def process_vcf(vcf_path):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
-    return gt_array
+    shape = gt_array.shape
+    return gt_array, shape
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
@@ -55,7 +56,8 @@ def process_count(matrix_path):
     gt_array = []
     gt = pd.read_csv(matrix_path)  
     gt_array = np.array(gt.values) # convert to numpy ndarray
-    return gt_array
+    shape = gt_array.shape
+    return gt_array, shape
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
@@ -136,15 +138,39 @@ def main():
         sys.exit(1)
 
     if type_arg =='v': 
-        array = process_vcf(input_arg)
+        array, samples, observations = process_vcf(input_arg)
     else:
-        array = process_count(input_arg)
+        array, samples, observations = process_count(input_arg)
+
+
+ 
+    pca_figs = None,
+    pca_eigvals = None
+    pca_eigvecs = None
+    tsne_figs: None 
+    tsna_stats: None 
+    umap_figs: None 
+    umap_stats: None 
+    output: None 
 
     if pca_arg:
         pca_output, pca_eigvals, pca_eigvecs = pca.pca(array, number_of_pcs_arg) # perform pca
-        # make a relevant figure??? 
-        fig = plt.figure()
-        write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+        pca_figs=[]
+        for i in range(number_of_pcs_arg):
+            for j in range(number_of_pcs_arg):
+                if j <= i:
+                    continue
+                fig = plt.figure()
+                ax = fig.add_subplot(111)
+                ax.scatter(pca_output[:, i], pca_output[:, j])
+                ax.set_xlabel('PC{}'.format(i+1))
+                ax.set_ylabel('PC{}'.format(j+1))
+                pca_figs.append(fig)
+    if umap_arg:
+        pass
+
+
+    write_html.write_html(input_arg, samples, observations, pca_figs=pca_figs, pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs, output=prefix)
     
     ##testing dummy figures
     #fig = plt.figure()

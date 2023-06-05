@@ -89,7 +89,7 @@ def main():
     # Define the arguments
     parser.add_argument('-t', '--type', required=True, choices=['v', 'c'], help="'v' for vcf, 'c' for RNA count matrix")
     parser.add_argument('-i', '--input', required=True, help="input file as specified by type")
-    parser.add_argument('-p', '--prefix', default=None, help="prefix for tsv and html outputs")
+    parser.add_argument('-p', '--prefix', default='', help="prefix for tsv and html outputs")
     parser.add_argument('--pca', action='store_true', help="run pca algorithm")
     parser.add_argument('--umap', action='store_true', help="run umap algorithm")
     parser.add_argument('--tsne', action='store_true', help="run tsne algorithm")
@@ -132,6 +132,10 @@ def main():
 
     if not (pca_arg or umap_arg or tsne_arg): 
         print("PCA, UMAP, or TSNE not declared")
+        sys.exit(1)
+
+    if leiden_arg and louvain_arg:
+        print("Please choose one clustering algorithm (leiden OR louvain)")
         sys.exit(1)
 
     if type_arg =='v': 

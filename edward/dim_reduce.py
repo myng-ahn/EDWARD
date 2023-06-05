@@ -50,7 +50,7 @@ def pca(data, nComponents):
 
     return pca_proj, sorted_eigvals, sorted_eigvecs
 
-def tsne(data, perplexity=30):
+def tsne(data, perplexity):
     scaled_data = StandardScaler().fit_transform(data)
     num_pca_components = min(50, data.shape[1])
     pca_transformed, __, __ = pca(scaled_data, num_pca_components)

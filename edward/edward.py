@@ -160,7 +160,7 @@ def main():
                     continue
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
-                ax.scatter(pca_output[:, i], pca_output[:, j])
+                ax.scatter(pca_output[:, i], pca_output[:, j], s=2, alpha=0.4)
                 ax.set_xlabel('PC{}'.format(i+1))
                 ax.set_ylabel('PC{}'.format(j+1))
                 pca_figs.append(fig)
@@ -179,7 +179,7 @@ def main():
         umap_transformed = dim_reduce.umap(array)
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(umap_transformed[:, 0], umap_transformed[:, 1])
+        ax.scatter(umap_transformed[:, 0], umap_transformed[:, 1], s=2, alpha=0.4)
         ax.set_xlabel('UMAP_1')
         ax.set_ylabel('UMAP_2')
         umap_fig = fig
@@ -187,7 +187,7 @@ def main():
         tsne_transformed = dim_reduce.tsne(array)
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(tsne_transformed[:, 0], tsne_transformed[:, 1])
+        ax.scatter(tsne_transformed[:, 0], tsne_transformed[:, 1], s=2, alpha=0.4)
         ax.set_xlabel('TSNE_1')
         ax.set_ylabel('TSNE_2')
         tsne_fig = fig
@@ -195,7 +195,7 @@ def main():
 
     write_html.write_html(input_arg, 
                           samples, observations, 
-                          pca_figs=pca_figs, pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs, 
+                          pca_figs=pca_figs, pca_eigvals=pca_eigvals[:number_of_pcs_arg], pca_eigvecs=pca_eigvecs[:, :number_of_pcs_arg], 
                           umap_fig=umap_fig,
                           tsne_fig=tsne_fig,
                           output=prefix_arg)

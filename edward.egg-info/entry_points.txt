@@ -1,0 +1,3 @@
+[console_scripts]
+edward = edward.edward:main
+

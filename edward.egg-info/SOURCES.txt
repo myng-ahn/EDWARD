@@ -1,0 +1,7 @@
+README.md
+setup.py
+edward.egg-info/PKG-INFO
+edward.egg-info/SOURCES.txt
+edward.egg-info/dependency_links.txt
+edward.egg-info/entry_points.txt
+edward.egg-info/top_level.txt

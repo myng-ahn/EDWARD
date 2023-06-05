@@ -162,6 +162,17 @@ def main():
                 ax.set_xlabel('PC{}'.format(i+1))
                 ax.set_ylabel('PC{}'.format(j+1))
                 pca_figs.append(fig)
+        
+        path = prefix_arg + '_pca_eigenval.txt'
+        with open(path, "w") as file:
+            for val in pca_eigvals:
+                file.write(str(val) + "\n")
+        path = prefix_arg + '_pca_eigenvec.txt'
+        with open(path, "w") as file:
+            for row in pca_eigvecs:
+                row_str = " ".join(str(element) for element in row)
+                file.write(row_str + "\n")
+        
     if umap_arg:
         umap_transformed = dim_reduce.umap(array)
         fig = plt.figure()

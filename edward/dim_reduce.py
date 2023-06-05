@@ -1,5 +1,5 @@
 import numpy as np
-#import umap
+import umap as um
 from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
 
@@ -62,6 +62,6 @@ def umap(data):
     scaled_data = StandardScaler().fit_transform(data)
     num_pca_components = min(50, data.shape[1])
     pca_transformed, __, __ = pca(scaled_data, num_pca_components)
-    umap = umap.UMAP()
+    umap = um.UMAP()
     umap_transformed = umap.fit_transform(pca_transformed)
     return umap_transformed

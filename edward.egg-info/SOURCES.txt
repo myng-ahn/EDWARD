@@ -1,5 +1,12 @@
 README.md
 setup.py
+edward/__init__.py
+edward/cluster.py
+edward/dim_reduce.py
+edward/edward.py
+edward/tsne.py
+edward/version.py
+edward/write_html.py
 edward.egg-info/PKG-INFO
 edward.egg-info/SOURCES.txt
 edward.egg-info/dependency_links.txt

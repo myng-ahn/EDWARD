@@ -6,9 +6,9 @@ Options in effect:
 
 Hostname: DESKTOP-KR5VD2G
 Working directory: /home/myahn725/EDWARD/benchmark
-Start time: Mon Jun  5 11:04:32 2023
+Start time: Mon Jun  5 11:47:32 2023
 
-Random number seed: 1685988272
+Random number seed: 1685990852
 15742 MB RAM detected; reserving 7871 MB for main workspace.
 --vcf: gtdata_v2-temporary.bed + gtdata_v2-temporary.bim +
 gtdata_v2-temporary.fam written.
@@ -24,4 +24,4 @@ Note: No phenotypes present.
 Relationship matrix calculation complete.
 --pca: Results saved to gtdata_v2.eigenval and gtdata_v2.eigenvec .
 
-End time: Mon Jun  5 11:04:35 2023
+End time: Mon Jun  5 11:47:37 2023

@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 # version-keeping code based on pybedtools
 curdir = os.path.abspath(os.path.dirname(__file__))
 MAJ = 1
-MIN = 0
+MIN = 5
 REV = 1
 VERSION = '%d.%d.%d' % (MAJ, MIN, REV)
 with open(os.path.join(curdir, 'edward/version.py'), 'w') as fout:

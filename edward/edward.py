@@ -27,6 +27,7 @@ def process_vcf(vcf_path):
     TODO: documentation
     '''
     gt_array = []
+    print(vcf_path)
     for variant in VCF(vcf_path):
         gt = [sum(genotypes[:-1]) for genotypes in variant.genotypes]
         # variant.genotypes is list containing [0, 0, True], [1, 1, True], [0, 1, False], ... 

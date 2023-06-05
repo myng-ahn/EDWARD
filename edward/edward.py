@@ -173,7 +173,7 @@ def main():
                     continue
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
-                ax.scatter(pca_output[:, i], pca_output[:, j], c=c)
+                ax.scatter(pca_output[:, i], pca_output[:, j], c=c, s=2, alpha=0.4)
                 ax.set_xlabel('PC{}'.format(i+1))
                 ax.set_ylabel('PC{}'.format(j+1))
                 pca_figs.append(fig)
@@ -190,7 +190,7 @@ def main():
         
     if umap_arg:
         umap_transformed = dim_reduce.umap(array)
-        k = np.sqrt(umap_transformed.shape[0])
+        k = np.sqrt(umap_transformed.shape[0])*4
         c = ['#52b2BF'] * umap_transformed.shape[0]
         if leiden_arg:
             idents = cluster.leiden(umap_transformed, k)
@@ -201,7 +201,7 @@ def main():
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(umap_transformed[:, 0], umap_transformed[:, 1], c=c)
+        ax.scatter(umap_transformed[:, 0], umap_transformed[:, 1], c=c, s=2, alpha=0.4)
         ax.set_xlabel('UMAP_1')
         ax.set_ylabel('UMAP_2')
         umap_fig = fig
@@ -220,7 +220,7 @@ def main():
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(tsne_transformed[:, 0], tsne_transformed[:, 1], c=c)
+        ax.scatter(tsne_transformed[:, 0], tsne_transformed[:, 1], c=c, s=2, alpha=0.4)
         ax.set_xlabel('TSNE_1')
         ax.set_ylabel('TSNE_2')
         tsne_fig = fig

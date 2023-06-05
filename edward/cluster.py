@@ -27,4 +27,3 @@ def louvain(data, k, res=0.5, n_iter=-1):
     louvain = Louvain(resolution=res, n_aggregations=n_iter)
     labels = louvain.fit_predict(neighbors)
     return labels
-

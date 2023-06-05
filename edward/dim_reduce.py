@@ -1,4 +1,7 @@
 import numpy as np
+import umap
+from sklearn.preprocessing import StandardScaler
+from sklearn.manifold import TSNE
 
 def pca(data, nComponents):
     """ Perform Principal Component Analysis
@@ -46,3 +49,19 @@ def pca(data, nComponents):
     pca_proj = pca_proj[:, 0:nComponents]
 
     return pca_proj, sorted_eigvals, sorted_eigvecs
+
+def tsne(data, perplexity=30):
+    scaled_data = StandardScaler().fit_transform(data)
+    num_pca_components = min(50, data.shape[1])
+    pca_transformed, __, __ = pca(scaled_data, num_pca_components)
+    tsne = TSNE(n_components=2, perplexity=perplexity, learning_rate='auto')
+    tsne_transformed = tsne.fit_transform(pca_transformed)
+    return tsne_transformed
+
+def umap(data):
+    scaled_data = StandardScaler().fit_transform(data)
+    num_pca_components = min(50, data.shape[1])
+    pca_transformed, __, __ = pca(scaled_data, num_pca_components)
+    umap = umap.UMAP()
+    umap_transformed = umap.fit_transform(pca_transformed)
+    return umap_transformed

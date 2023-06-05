@@ -10,16 +10,19 @@ from cyvcf2 import VCF
 #from html import *
 #from write_html import write_html
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 from edward import __version__
 from . import dim_reduce as dim_reduce
 from . import write_html as write_html
-
+from . import cluster as cluster
 
 '''
 pca input
 - data: numpy ndarray
 - ncomponents: int
 '''
+
+COLORS = list(mcolors.XKCD_COLORS.values())
 
 # for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
 def process_vcf(vcf_path):
@@ -154,6 +157,15 @@ def main():
 
     if pca_arg:
         pca_output, pca_eigvals, pca_eigvecs = dim_reduce.pca(array, number_of_pcs_arg) # perform pca
+        k = np.sqrt(pca_output.shape[0])
+        c = ['#52b2BF'] * pca_output.shape[0]
+        if leiden_arg:
+            idents = cluster.leiden(pca_output, k)
+            c = [COLORS[idx] for idx in idents]
+        elif louvain_arg:
+            idents = cluster.louvain(pca_output, k)
+            c = [COLORS[idx] for idx in idents]
+
         pca_figs=[]
         for i in range(number_of_pcs_arg):
             for j in range(number_of_pcs_arg):
@@ -161,7 +173,7 @@ def main():
                     continue
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
-                ax.scatter(pca_output[:, i], pca_output[:, j])
+                ax.scatter(pca_output[:, i], pca_output[:, j], c=c)
                 ax.set_xlabel('PC{}'.format(i+1))
                 ax.set_ylabel('PC{}'.format(j+1))
                 pca_figs.append(fig)
@@ -178,17 +190,37 @@ def main():
         
     if umap_arg:
         umap_transformed = dim_reduce.umap(array)
+        k = np.sqrt(umap_transformed.shape[0])
+        c = ['#52b2BF'] * umap_transformed.shape[0]
+        if leiden_arg:
+            idents = cluster.leiden(umap_transformed, k)
+            c = [COLORS[idx] for idx in idents]
+        elif louvain_arg:
+            idents = cluster.louvain(umap_transformed, k)
+            c = [COLORS[idx] for idx in idents]
+
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(umap_transformed[:, 0], umap_transformed[:, 1])
+        ax.scatter(umap_transformed[:, 0], umap_transformed[:, 1], c=c)
         ax.set_xlabel('UMAP_1')
         ax.set_ylabel('UMAP_2')
         umap_fig = fig
+
     if tsne_arg:
-        tsne_transformed = dim_reduce.tsne(array)
+        perplexity = np.sqrt(array.shape[0])
+        tsne_transformed = dim_reduce.tsne(array, perplexity)
+        k = np.sqrt(tsne_transformed.shape[0])
+        c = ['#52b2BF'] * tsne_transformed.shape[0]
+        if leiden_arg:
+            idents = cluster.leiden(tsne_transformed, k)
+            c = [COLORS[idx] for idx in idents]
+        elif louvain_arg:
+            idents = cluster.louvain(tsne_transformed, k)
+            c = [COLORS[idx] for idx in idents]
+
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(tsne_transformed[:, 0], tsne_transformed[:, 1])
+        ax.scatter(tsne_transformed[:, 0], tsne_transformed[:, 1], c=c)
         ax.set_xlabel('TSNE_1')
         ax.set_ylabel('TSNE_2')
         tsne_fig = fig

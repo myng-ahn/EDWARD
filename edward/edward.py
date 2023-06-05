@@ -6,7 +6,7 @@ import numpy as np
 import os
 from cyvcf2 import VCF
 #from pca import pca
-from html import *
+#from html import *
 #from write_html import write_html
 import matplotlib.pyplot as plt
 from edward import __version__
@@ -37,8 +37,8 @@ def process_pca(vcf_path, number_of_pcs_arg):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
-    pca_transformed = pca.pca(gt_array, number_of_pcs_arg) # perform pca
-    
+    pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
+    return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
 
@@ -107,12 +107,11 @@ def main():
 
     
     
-    pca_matrix = process_pca(input_arg, number_of_pcs_arg)
-    pca_output, pca_eigvals, pca_eigvecs = pca(pca_matrix, number_of_pcs_arg)
+    pca_output, pca_eigvals, pca_eigvecs = process_pca(input_arg, number_of_pcs_arg)
 
     ##testing dummy figures
     fig = plt.figure()
-    write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+    write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
 
     sys.exit(0)
 

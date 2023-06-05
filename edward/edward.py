@@ -25,7 +25,7 @@ def main():
     pass
 
 # for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
-def process_vcf_pca(vcf_path, number_of_pcs_arg):
+def process_vcf(vcf_path):
     '''
     TODO: documentation
     '''
@@ -41,12 +41,13 @@ def process_vcf_pca(vcf_path, number_of_pcs_arg):
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
     gt_array = np.array(gt_array) # convert to numpy ndarray
+    return gt_array
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
     # TODO: plot pca_transformed and output to html
 
-def process_count_pca(matrix_path, number_of_pcs_arg):
+def process_count(matrix_path):
     '''
     TODO: documentation
     '''
@@ -54,6 +55,7 @@ def process_count_pca(matrix_path, number_of_pcs_arg):
     gt_array = []
     gt = pd.read_csv(matrix_path)  
     gt_array = np.array(gt.values) # convert to numpy ndarray
+    return gt_array
     pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
     return pca_proj, sorted_eigvals, sorted_eigvecs
     print(pca_transformed) # for testing. should comment out
@@ -133,14 +135,17 @@ def main():
         print("PCA, UMAP, or TSNE not declared")
         sys.exit(1)
 
+    if type_arg =='v': 
+        array = process_vcf(input_arg)
+    else:
+        array = process_count(input_arg)
+
     if pca_arg:
-        if type_arg =='v': 
-            pca_output, pca_eigvals, pca_eigvecs = process_vcf_pca(input_arg, number_of_pcs_arg)
-        else:
-            pca_output, pca_eigvals, pca_eigvecs = process_count_pca(input_arg, number_of_pcs_arg)
-
-    #pca_output, pca_eigvals, pca_eigvecs = process_vcf_pca(input_arg, number_of_pcs_arg)
-
+        pca_output, pca_eigvals, pca_eigvecs = pca.pca(array, number_of_pcs_arg) # perform pca
+        # make a relevant figure??? 
+        fig = plt.figure()
+        write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)
+    
     ##testing dummy figures
     #fig = plt.figure()
     #write_html.write_html(input_arg, -1, -1, pca_figs=[fig], pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs)

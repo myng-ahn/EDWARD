@@ -134,6 +134,10 @@ def main():
         print("PCA, UMAP, or TSNE not declared")
         sys.exit(1)
 
+    if leiden_arg and louvain_arg:
+        print("Please choose one clustering algorithm (leiden OR louvain)")
+        sys.exit(1)
+
     if type_arg =='v': 
         array, samples, observations = process_vcf(input_arg)
     else:

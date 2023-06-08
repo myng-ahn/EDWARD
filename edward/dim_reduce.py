@@ -13,7 +13,7 @@ def pca(data, nComponents):
     ----------
     data : ndarray
         The data on which to perform PCA. Rows represent observations and 
-        columns represents features.
+        columns represent features.
     nComponents : int > 0
         Number of PCs to use for dimensionality reduction.
 
@@ -51,9 +51,38 @@ def pca(data, nComponents):
     return pca_proj, sorted_eigvals, sorted_eigvecs
 
 def tsne(data, perplexity):
+    """ Perform t-SNE dimensionality reduction.
+
+    Performs automatic PCA of data followed by sklearn implementation of 
+    t-SNE dimensionality reduction. 
+
+    Parameters
+    ----------
+    data : ndarray
+        The data on which to perform t-SNE. Rows represent observations and 
+        columns represent features.
+    perplexity : int
+        Related to number of nearby points considered as nearest neighbors.
+
+    Returns
+    -------
+    ndarray
+        t-SNE reduced data.
+
+    Raises
+    ------
+    ValueError
+        if perplexity is greater than number of samples in data.
+    """
+    if perplexity > data.shape[0]:
+        raise ValueError("Perplexity cannot exceed number of samples in data.")
+
+    # run PCA with 50 PCs
     scaled_data = StandardScaler().fit_transform(data)
     num_pca_components = min(50, data.shape[1])
     pca_transformed, __, __ = pca(scaled_data, num_pca_components)
+
+    # fit and transform data using sklearn implementation of t-SNE
     tsne = TSNE(n_components=2, perplexity=perplexity)
     print(pca_transformed)
     # pca_transformed = np.array(pca_transformed, dtype='float32')
@@ -61,9 +90,28 @@ def tsne(data, perplexity):
     return tsne_transformed
 
 def umap(data):
+    """ Perform UMAP dimensionality reduction.
+
+    Performs automatic PCA of data followed by UMAP dimensionality reduction
+    using external UMAP package.
+
+    Parameters
+    ----------
+    data : ndarray
+        The data on which to perform UMAP reduction. Rows represent observations and 
+        columns represent features.
+
+    Returns
+    -------
+    ndarray
+        UMAP dimensionality reduced data.
+    """
+    # run PCA with 50 PCs
     scaled_data = StandardScaler().fit_transform(data)
     num_pca_components = min(50, data.shape[1])
     pca_transformed, __, __ = pca(scaled_data, num_pca_components)
+
+    # fit and transform data using external UMAP implementation with default params
     um = ump.UMAP()
     umap_transformed = um.fit_transform(pca_transformed)
     return umap_transformed

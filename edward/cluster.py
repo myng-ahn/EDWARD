@@ -4,7 +4,7 @@ from sknetwork.clustering import Louvain
 from sklearn.neighbors import NearestNeighbors
 
 def knn(data, k):
-    """ TODO: documentation
+    """ Perform k nearest neighbors clustering
     """
     k = int(k)
     neighbors = NearestNeighbors(n_neighbors=k, algorithm='auto').fit(data)

@@ -228,7 +228,7 @@ def main():
 
     write_html.write_html(input_arg, 
                           samples, observations, 
-                          pca_figs=pca_figs, pca_eigvals=pca_eigvals, pca_eigvecs=pca_eigvecs, 
+                          pca_figs=pca_figs, pca_eigvals=pca_eigvals[:number_of_pcs_arg], pca_eigvecs=pca_eigvecs[:, :number_of_pcs_arg], 
                           umap_fig=umap_fig,
                           tsne_fig=tsne_fig,
                           output=prefix_arg)

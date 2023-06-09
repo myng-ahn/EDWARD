@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 
+# silences deprecation warnings
+from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+import warnings
+warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
+warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
+
+
 import argparse
 import sys
 import numpy as np
 import pandas as pd 
 import os
 from cyvcf2 import VCF
-#from pca import pca
-#from html import *
-#from write_html import write_html
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from edward import __version__
@@ -16,23 +20,35 @@ from . import dim_reduce as dim_reduce
 from . import write_html as write_html
 from . import cluster as cluster
 
-'''
-pca input
-- data: numpy ndarray
-- ncomponents: int
-'''
-
+# colors for clustering
 COLORS = list(mcolors.XKCD_COLORS.values())
 
-# for testing run './untitled.py -t v -i [input_file] --pca --num_PCs'
 def process_vcf(vcf_path):
-    '''
-    TODO: documentation
+    ''' Converts VCF file to matrix where rows are variants and columns are
+    SNPs that can be processed by downstream dimensionality reduction.
+
+    Parameters
+    ----------
+    vcf_path : str
+        Path for vcf.gz file
+
+    Returns
+    -------
+    ndarray
+        Matrix where rows are variants and columns are SNPs. Each entry is the 
+        sum of the alleles at that SNP where 0 is reference and 1 is alternate.
+    int
+        Number of rows in matrix
+    int
+        Number of columns in matrix
     '''
     gt_array = []
-    print(vcf_path)
     for variant in VCF(vcf_path):
         gt = [sum(genotypes[:-1]) for genotypes in variant.genotypes]
+        # using variant.gt_types
+        # gt = variant.gt_types
+        # gt = [x if x!=3 else 0 for x in gt]
+
         # variant.genotypes is list containing [0, 0, True], [1, 1, True], [0, 1, False], ... 
         # where the first 2 elements are the genotype and the third element is a boolean indicating
         # whether that genotype is phased or not (for now I'm ignoring this but it may be important
@@ -41,17 +57,28 @@ def process_vcf(vcf_path):
         # NOTE: some of the genotypes only have one allele and some have negative alleles 
         # whatever that even means. For now I'm just gonna keep going but something to investigate.
         gt_array.append(gt)
-    gt_array = np.array(gt_array) # convert to numpy ndarray
+    gt_array = np.array(gt_array)
     row, col = gt_array.shape
     return gt_array, row, col
-    pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
-    return pca_proj, sorted_eigvals, sorted_eigvecs
-    print(pca_transformed) # for testing. should comment out
-    # TODO: plot pca_transformed and output to html
 
 def process_count(matrix_path):
-    '''
-    TODO: documentation
+    ''' Converts count matrix in the form of a csv into a ndarray matrix that can
+    be processed by downstream dimensionality reduction.
+
+    Parameters
+    ----------
+    matrix_path:
+        Path to count matrix csv file.
+    
+    Returns
+    -------
+    ndarray
+        Matrix where rows are samples and columns are genes. Each entry is the 
+        expression of a gene for a particular sample.
+    int
+        Number of rows in matrix
+    int
+        Number of columns in matrix
     '''
     # rows = samples, columns = genes
     gt_array = []
@@ -59,9 +86,6 @@ def process_count(matrix_path):
     gt_array = np.array(gt.values) # convert to numpy ndarray
     row, col = gt_array.shape
     return gt_array, row, col
-    pca_proj, sorted_eigvals, sorted_eigvecs = pca.pca(gt_array, number_of_pcs_arg) # perform pca
-    return pca_proj, sorted_eigvals, sorted_eigvecs
-    print(pca_transformed) # for testing. should comment out
 
 
 def main():
@@ -127,13 +151,6 @@ def main():
     print(f'Louvain: {louvain_arg}')
     print(f'Number of PCs: {number_of_pcs_arg}')
 
-    
-    ### 
-    # check out arguments
-    #
-    #
-    ###
-
     if not (pca_arg or umap_arg or tsne_arg): 
         print("PCA, UMAP, or TSNE not declared")
         sys.exit(1)
@@ -147,8 +164,6 @@ def main():
     else:
         array, samples, observations = process_count(input_arg)
 
-
- 
     pca_figs = None
     pca_eigvals = None
     pca_eigvecs = None
@@ -157,7 +172,8 @@ def main():
 
     if pca_arg:
         pca_output, pca_eigvals, pca_eigvecs = dim_reduce.pca(array, number_of_pcs_arg) # perform pca
-        k = np.sqrt(pca_output.shape[0])
+        k = np.sqrt(pca_output.shape[0]) # good heuristic for value of k
+        # if clustering is selected assign colors to each point
         c = ['#52b2BF'] * pca_output.shape[0]
         if leiden_arg:
             idents = cluster.leiden(pca_output, k)
@@ -190,7 +206,8 @@ def main():
         
     if umap_arg:
         umap_transformed = dim_reduce.umap(array)
-        k = np.sqrt(umap_transformed.shape[0])*4
+        k = np.sqrt(umap_transformed.shape[0])*4 # good heuristic for value of k
+        # if clustering is selected assign a color to each point
         c = ['#52b2BF'] * umap_transformed.shape[0]
         if leiden_arg:
             idents = cluster.leiden(umap_transformed, k)
@@ -209,7 +226,8 @@ def main():
     if tsne_arg:
         perplexity = np.sqrt(array.shape[0])
         tsne_transformed = dim_reduce.tsne(array, perplexity)
-        k = np.sqrt(tsne_transformed.shape[0])
+        k = np.sqrt(tsne_transformed.shape[0]) # good heuristic for value of k
+        # if clustering is selected assign a color to each point
         c = ['#52b2BF'] * tsne_transformed.shape[0]
         if leiden_arg:
             idents = cluster.leiden(tsne_transformed, k)
@@ -225,15 +243,13 @@ def main():
         ax.set_ylabel('TSNE_2')
         tsne_fig = fig
 
-
+    # write results to html
     write_html.write_html(input_arg, 
                           samples, observations, 
                           pca_figs=pca_figs, pca_eigvals=pca_eigvals[:number_of_pcs_arg], pca_eigvecs=pca_eigvecs[:, :number_of_pcs_arg], 
                           umap_fig=umap_fig,
                           tsne_fig=tsne_fig,
                           output=prefix_arg)
-
-
     sys.exit(0)
 
 

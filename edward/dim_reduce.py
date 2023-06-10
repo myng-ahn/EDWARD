@@ -84,7 +84,6 @@ def tsne(data, perplexity):
 
     # fit and transform data using sklearn implementation of t-SNE
     tsne = TSNE(n_components=2, perplexity=perplexity)
-    print(pca_transformed)
     # pca_transformed = np.array(pca_transformed, dtype='float32')
     tsne_transformed = tsne.fit_transform(pca_transformed)
     return tsne_transformed

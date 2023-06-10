@@ -23,12 +23,12 @@ The basic usage of `edward` is
 edward [required] --type <v or c> --pca/umap/tsne --input <input> [options] --prefix --leiden --louivain --number-of-pcs 
 ```
 
-To run `edward` on a small test example (using files in this repo):
+To run `edward` on a test example (using files in this repo):
 
 ```
-edward -t v -i example_data/sample.vcf.gz --pca -n 2
+edward -t v -i example_data/scRNA_counts.csv --pca --umap --tsne -n 2 -p output
 ```
-* For now `output.html` will be generated
+`output.html` will be generated
 
 # Documentation 
 

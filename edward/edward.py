@@ -23,6 +23,12 @@ from . import cluster as cluster
 # colors for clustering
 COLORS = list(mcolors.XKCD_COLORS.values())
 
+def parse_helper(genotype):
+    if len(genotype) > 2:
+        return 0
+    g = [x if x>0 else 0 for x in genotype]
+    return sum(g)
+
 def process_vcf(vcf_path):
     ''' Converts VCF file to matrix where rows are variants and columns are
     SNPs that can be processed by downstream dimensionality reduction.
@@ -45,9 +51,11 @@ def process_vcf(vcf_path):
     gt_array = []
     for variant in VCF(vcf_path):
         gt = [sum(genotypes[:-1]) for genotypes in variant.genotypes]
+        gt = [parse_helper(genotypes[:-1]) for genotypes in variant.genotypes]
+
         # using variant.gt_types
-        # gt = variant.gt_types
-        # gt = [x if x!=3 else 0 for x in gt]
+        gt = variant.gt_types
+        gt = [x if x!=3 else 0 for x in gt]
 
         # variant.genotypes is list containing [0, 0, True], [1, 1, True], [0, 1, False], ... 
         # where the first 2 elements are the genotype and the third element is a boolean indicating
@@ -224,7 +232,7 @@ def main():
         umap_fig = fig
 
     if tsne_arg:
-        perplexity = np.sqrt(array.shape[0])
+        perplexity = 50
         tsne_transformed = dim_reduce.tsne(array, perplexity)
         k = np.sqrt(tsne_transformed.shape[0]) # good heuristic for value of k
         # if clustering is selected assign a color to each point
